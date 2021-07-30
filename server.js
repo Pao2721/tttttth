@@ -1,12 +1,15 @@
+import ('dotenv/config')
 import createError from 'http-errors'
 import express from 'express'
 import path from 'path'
+import('./config/database.js')
 import { fileURLToPath } from 'url'
 import cookieParser from 'cookie-parser'
 import logger from 'morgan'
+import methodOverride from 'method-override'
 
 import { router as indexRouter } from './routes/index.js'
-import { router as usersRouter } from './routes/users.js'
+import { router as todosRouter } from './routes/todos.js'
 
 const app = express()
 
@@ -16,7 +19,7 @@ app.set(
   path.join(path.dirname(fileURLToPath(import.meta.url)), 'views')
 )
 app.set('view engine', 'ejs')
-
+app.use(methodOverride('method'))
 app.use(logger('dev'))
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
@@ -28,7 +31,7 @@ app.use(
 )
 
 app.use('/', indexRouter)
-app.use('/users', usersRouter)
+app.use('/todos', todosRouter)
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
